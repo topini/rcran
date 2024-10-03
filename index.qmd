@@ -3,25 +3,79 @@ title: "clases R"
 author: "Andrée Euribe"
 format: html
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
-## Quarto
+# Diseños experimentales
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## DCA: diseño completamente al azar
 
-## Running Code
+Dosis de fertilización nitrogenada:
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
-```
-
-You can add options to executable code like this
+- 0
+- 50
+- 100
+- 150
+Rep:5
 
 ```{r}
-#| echo: false
-2 * 2
+# Cargar el paquete
+library(agricolae)
+
+# Definir los niveles de los factores
+factores <- c(0, 50, 100, 150)
+
+# Número de repeticiones
+replicaciones <- 5
+
+# Crear el diseño DCA
+dca <- design.crd(trt = factores, r = replicaciones)
+
+# Mostrar el diseño
+print(dca)
+
+# Si deseas visualizar el diseño en forma de tabla
+tabla_diseño <- as.data.frame(dca)
+colnames(tabla_diseño) <- c("Replication", "Treatment")
+print(tabla_diseño)
+
+
+# Aquí puedes añadir tus datos de respuesta
+# Suponiendo que tienes un vector 'respuestas' con tus datos
+# respuestas <- c(...)  # Aquí irían tus datos de respuesta
+
+# Agregar los datos de respuesta al diseño
+# dca$data <- respuestas
+
+# Realizar análisis de varianza (ANOVA)
+# anova_result <- aov(respuestas ~ as.factor(tratamientos), data=dca)
+# summary(anova_result)
+
+# Realizar pruebas de comparación de medias
+# HSD_result <- HSD.test(anova_result, "tratamientos", group=TRUE)
+# print(HSD_result)
+
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+
+##DBCA
+Factor 1 (dosis de nitrogeno): 0,50,100,150
+Factor 2 (variedades de papa): canchan y peruanita
+Bloques: 5
+```{r}
+library(agricolae)
+
+factores <- c(0, 50, 100, 150)
+variedad <- c("canchan","peruanita")
+trt<-c(4,2) # factorial 3x2
+outdesign <-design.ab(trt, r=5)
+
+str(outdesign)
+book<-outdesign$book
+book
+#head(book,30) # print of the field book
+```
+
+#Analisis de datos
