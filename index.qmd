@@ -79,3 +79,65 @@ book
 ```
 
 #Analisis de datos
+
+
+```{r}
+#library(tidyverse)
+#library(googlesheets4)
+
+library(readxl)
+fb <- read_excel("LA MOLINA 2014 POTATO WUE (FB).xlsx", 
+                                            sheet = "fb")
+
+View(fb)
+str(fb)
+
+```
+
+##Importar datos
+
+```{r}
+#url <- "https"
+#gs <- as_sheets_id(url)
+#fb <- range_read(gs,"fb")
+```
+
+##Modelo estadistico
+```{r}
+modelo <- aov(formula = lfa ~ riego + geno + riego*geno + block, data = fb)
+plot(modelo)
+anova(modelo)
+```
+
+##Comparacion de medias
+```{r}
+library(agricolae)
+mc <- agricolae::duncan.test(modelo, trt=c("riego","geno"))
+mc
+str(mc)
+```
+
+
+```{r}
+#plot(mc)
+library(emmeans)
+library(multcomp)
+mc <- emmeand(model, ~riego | geno) %>%
+  cld(Letter = letters, reversed = T)
+mc
+
+```
+
+
+##Grafico
+```{r}
+library(inti)
+plot_smr(data = mc, type = "bar", x = "geno", y = "emmean", group = "riego", sig = ".group", error = "SE", ylimits = c(0, 12000, 2000))
+##ggplot(mc, aes(x = geno, y = emmean, fill = riego)) + geom_bar(stat = "identity") + theme_minimal() + labs(title = "Grafico de barras", x = "Categoria", y = "valores")
+
+```
+
+
+
+
+
