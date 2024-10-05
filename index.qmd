@@ -4,7 +4,7 @@ author: "Andrée Euribe"
 format: html
 editor: visual
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Diseños experimentales
@@ -112,7 +112,7 @@ anova(modelo)
 ##Comparacion de medias
 ```{r}
 library(agricolae)
-mc <- agricolae::duncan.test(modelo, trt=c("riego","geno"))
+mc <- duncan.test(modelo, trt=c("riego","geno"))
 mc
 str(mc)
 ```
@@ -122,8 +122,9 @@ str(mc)
 #plot(mc)
 library(emmeans)
 library(multcomp)
-mc <- emmeand(model, ~riego | geno) %>%
-  cld(Letter = letters, reversed = T)
+library(dplyr)
+mc <- emmeans(modelo, ~riego | geno) %>%
+  cld(Letter = letters, reversed = TRUE)
 mc
 
 ```
